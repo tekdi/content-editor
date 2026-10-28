@@ -19,7 +19,8 @@
       "@editor/editor-core": ["packages/editor-core/src/index.ts"],
       "@editor/editor-content": ["packages/editor-content/src/index.ts"],
       "@editor/editor-course": ["packages/editor-course/src/index.ts"],
-      "@editor/editor-webcomponent": ["packages/editor-webcomponent/src/index.ts"]
+      "@editor/editor-webcomponent": ["packages/editor-webcomponent/src/index.ts"],
+      "@editor/shell-manage": ["packages/shell-manage/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist", "**/node_modules"]

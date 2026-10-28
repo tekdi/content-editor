@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@editor/editor-webcomponent": "0.1.0",
+    "@editor/shell-manage": "0.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }

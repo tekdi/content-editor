@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shell Manage Playground</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f5f5f7; }
+      shell-create { display: block; max-width: 720px; margin: 0 auto; background: #fff; }
+      #log { max-width: 720px; margin: 16px auto; font: 12px/1.4 monospace; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <shell-create></shell-create>
+    <pre id="log"></pre>
+    <script type="module">
+      import '/src/index.ts';
+
+      const el = document.querySelector('shell-create');
+      const log = document.getElementById('log');
+      // Empty baseurl → same-origin request, forwarded by the vite dev proxy.
+      el.config = { baseurl: '', channel: 'pos-channel' };
+
+      for (const name of ['shell:ready', 'shell:submit', 'shell:cancel', 'shell:error']) {
+        el.addEventListener(name, (e) => {
+          console.log(name, e.detail);
+          log.textContent = `${name}\n${JSON.stringify(e.detail ?? null, null, 2)}\n\n` + log.textContent;
+        });
+      }
+    </script>
+  </body>
+</html>

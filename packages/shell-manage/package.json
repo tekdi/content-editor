@@ -1,0 +1,31 @@
+{
+  "name": "@editor/shell-manage",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/shell-manage.umd.cjs",
+  "module": "./dist/shell-manage.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/shell-manage.es.js",
+      "require": "./dist/shell-manage.umd.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "src"],
+  "scripts": {
+    "build:esm": "vite build --config vite.config.ts",
+    "build:iife": "vite build --config vite.iife.config.ts",
+    "build": "npm run build:esm && npm run build:iife"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.13.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6"
+  }
+}

@@ -1,7 +1,11 @@
 import { registerEditorWrapper } from '@editor/editor-webcomponent';
 import type { EditorWrapperConfig } from '@editor/editor-webcomponent';
+import { registerShellComponents } from '@editor/shell-manage';
+import { SHELL_EVENTS } from '@editor/shell-manage';
+import type { ShellManageConfig } from '@editor/shell-manage';
 
 registerEditorWrapper();
+registerShellComponents();
 
 const defaultConfig: EditorWrapperConfig = {
   editorType: 'content',
@@ -105,15 +109,78 @@ const courseConfig: EditorWrapperConfig = {
   },
 };
 
-const CONFIGS: Record<string, EditorWrapperConfig> = {
+// shell-manage components take a plain ShellManageConfig, not an EditorWrapperConfig.
+// The interface gateway allows CORS, so the demo calls it directly (no dev proxy).
+// Token and tenant are read from localStorage.token / localStorage.tenantId (set via the sidebar fields).
+const shellConfig: ShellManageConfig = 
+/*{
+  baseurl: 'https://qa-interface.prathamdigital.org/interface/v1/',
+  channel: 'scp-channel',
+  framework: 'scp-channel',
+  createdBy: 'cb47d101-12c0-4119-b98b-50dbe45c6299',
+  createdFor: ['scp-channel'],
+  targetFWIds: ['scp-framework'],
+  lastUpdatedBy: 'cb47d101-12c0-4119-b98b-50dbe45c6299',
+  theme: {
+    primary: '#2980b9',
+    secondary: '#e67e22',
+    buttonShape: 'rounded',
+  },
+};*/
+{
+  "baseurl": "https://qa-middleware.prathamdigital.org/",
+  "channel": "pos-channel",
+  "framework": "pos-framework",
+  "createdBy": "254f58a3-3638-40e6-9921-7c4035ac7965",
+  "createdFor": [
+    "pos-channel"
+  ],
+  "targetFWIds": [
+    "pos-framework"
+  ],
+  "lastUpdatedBy": "254f58a3-3638-40e6-9921-7c4035ac7965",
+  "theme": {
+    "primary": "#e67e22",
+    "secondary": "#2980b9",
+    "buttonShape": "rounded"
+  }
+};
+
+const CONFIGS: Record<string, EditorWrapperConfig | ShellManageConfig> = {
   content: defaultConfig,
   course: courseConfig,
+  'shell-manage': shellConfig,
+  'shell-create': shellConfig,
 };
 
 const editorEl = document.getElementById('editor') as HTMLElement & {
   editorConfig: EditorWrapperConfig;
   getData: () => unknown;
 };
+
+type ShellElement = HTMLElement & { config: ShellManageConfig | null };
+
+/** Dropdown values rendered by a standalone shell element instead of <editor-wrapper>. */
+const SHELL_ELEMENTS: Record<string, ShellElement> = {
+  'shell-manage': document.getElementById('shell-manage') as ShellElement,
+  'shell-create': document.getElementById('shell-create') as ShellElement,
+};
+
+const tokenSection = document.getElementById('token-section') as HTMLDivElement;
+// Mirrors what the host app keeps in localStorage for the shell components.
+function bindStorageInput(inputId: string, key: string): void {
+  const input = document.getElementById(inputId) as HTMLInputElement;
+  input.value = localStorage.getItem(key) ?? '';
+  input.addEventListener('change', () => {
+    const value = input.value.trim();
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+    logEvent(`>>> localStorage.${key}`, value ? 'set' : 'removed');
+  });
+}
+
+bindStorageInput('token-input', 'token');
+bindStorageInput('tenant-input', 'tenantId');
 
 const eventLog         = document.getElementById('event-log') as HTMLPreElement;
 const loadBtn          = document.getElementById('load-btn') as HTMLButtonElement;
@@ -136,11 +203,38 @@ EVENTS.forEach((evt) => {
   });
 });
 
+Object.entries(SHELL_ELEMENTS).forEach(([tag, el]) => {
+  SHELL_EVENTS.forEach((evt) => {
+    el.addEventListener(evt, (e) => {
+      logEvent(`${tag} → ${evt}`, (e as CustomEvent).detail);
+    });
+  });
+});
+
+function isShellType(type: string): boolean {
+  return type in SHELL_ELEMENTS;
+}
+
+/** Shows the element for `type` and hands it the config. */
+function applyConfig(type: string, cfg: EditorWrapperConfig | ShellManageConfig): void {
+  editorEl.hidden = isShellType(type);
+  tokenSection.hidden = !isShellType(type);
+  for (const [tag, el] of Object.entries(SHELL_ELEMENTS)) {
+    el.hidden = tag !== type;
+  }
+  if (isShellType(type)) {
+    SHELL_ELEMENTS[type].config = cfg as ShellManageConfig;
+  } else {
+    editorEl.editorConfig = cfg as EditorWrapperConfig;
+  }
+}
+
 loadBtn.addEventListener('click', () => {
+  const type = editorTypeSelect.value;
   try {
-    const cfg = JSON.parse(configEditor.value) as EditorWrapperConfig;
-    editorEl.editorConfig = cfg;
-    logEvent('>>> config applied', { editorType: cfg.editorType });
+    const cfg = JSON.parse(configEditor.value) as EditorWrapperConfig | ShellManageConfig;
+    applyConfig(type, cfg);
+    logEvent('>>> config applied', { type });
   } catch {
     alert('Invalid JSON in config editor');
   }
@@ -151,6 +245,10 @@ clearBtn.addEventListener('click', () => {
 });
 
 logDataBtn.addEventListener('click', () => {
+  if (isShellType(editorTypeSelect.value)) {
+    logEvent('>>> current config', SHELL_ELEMENTS[editorTypeSelect.value].config);
+    return;
+  }
   logEvent('>>> current data', editorEl.getData());
 });
 
@@ -158,8 +256,8 @@ editorTypeSelect.addEventListener('change', () => {
   const cfg = CONFIGS[editorTypeSelect.value];
   if (!cfg) return;
   configEditor.value = JSON.stringify(cfg, null, 2);
-  editorEl.editorConfig = cfg;
-  logEvent('>>> editor type switched', { editorType: cfg.editorType });
+  applyConfig(editorTypeSelect.value, cfg);
+  logEvent('>>> editor type switched', { type: editorTypeSelect.value });
 });
 
 // Pre-fill editor and auto-load on startup

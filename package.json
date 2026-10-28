@@ -9,7 +9,9 @@
   "scripts": {
     "build": "nx run-many --target=build",
     "build:content": "nx run-many --target=build --projects=editor-core,editor-content,editor-course,editor-webcomponent",
-    "build:all": "nx run-many --target=build --projects=editor-core,editor-content,editor-course,editor-webcomponent",
+    "build:all": "nx run-many --target=build --projects=editor-core,editor-content,editor-course,editor-webcomponent,shell-manage",
+    "build:shell": "nx run shell-manage:build",
+    "dev:shell": "nx run shell-manage:dev",
     "test": "nx run-many --target=test",
     "lint": "nx run-many --target=lint",
     "dev:demo": "nx run demo:dev"
