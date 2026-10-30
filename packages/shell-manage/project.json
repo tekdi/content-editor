@@ -1,0 +1,8 @@
+{
+  "name": "shell-manage",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shell-manage/src",
+  "projectType": "library",
+  "tags": ["scope:shell"],
+  "targets": {}
+}

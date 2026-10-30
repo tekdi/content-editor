@@ -1,0 +1,8 @@
+{
+  "name": "editor-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/editor-core/src",
+  "projectType": "library",
+  "tags": ["scope:core"],
+  "targets": {}
+}

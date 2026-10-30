@@ -1,0 +1,42 @@
+{
+  "name": "content-editor",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "nx run-many --target=build",
+    "build:content": "nx run-many --target=build --projects=editor-core,editor-content,editor-course,editor-webcomponent",
+    "build:all": "nx run-many --target=build --projects=editor-core,editor-content,editor-course,editor-webcomponent,shell-manage",
+    "build:shell": "nx run shell-manage:build",
+    "dev:shell": "nx run shell-manage:dev",
+    "publish:webcomponents": "node scripts/publish-webcomponents.mjs",
+    "build:pratham": "npm run build:all && npm run publish:webcomponents",
+    "test": "nx run-many --target=test",
+    "lint": "nx run-many --target=lint",
+    "dev:demo": "nx run demo:dev"
+  },
+  "devDependencies": {
+    "@nx/js": "22.6.3",
+    "@nx/react": "22.6.3",
+    "@nx/vite": "22.6.3",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/ui": "^2.0.0",
+    "eslint": "^9.8.0",
+    "jsdom": "^25.0.1",
+    "nx": "22.6.3",
+    "prettier": "^3.3.3",
+    "typescript": "~5.7.2",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

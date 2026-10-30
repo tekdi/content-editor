@@ -1,0 +1,17 @@
+{
+  "name": "@editor/demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@editor/editor-webcomponent": "0.1.0",
+    "@editor/shell-manage": "0.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

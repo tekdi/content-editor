@@ -1,0 +1,22 @@
+{
+  "name": "@editor/editor-course",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/editor-course.umd.cjs",
+  "module": "./dist/editor-course.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/editor-course.es.js",
+      "require": "./dist/editor-course.umd.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "src"],
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@editor/editor-core": "0.1.0"
+  }
+}

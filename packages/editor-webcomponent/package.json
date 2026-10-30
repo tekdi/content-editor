@@ -1,0 +1,29 @@
+{
+  "name": "@editor/editor-webcomponent",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/editor-wrapper.umd.cjs",
+  "module": "./dist/editor-wrapper.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/editor-wrapper.es.js",
+      "require": "./dist/editor-wrapper.umd.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "src"],
+  "scripts": {
+    "build:esm": "vite build --config vite.config.ts",
+    "build:iife": "vite build --config vite.iife.config.ts",
+    "build": "npm run build:esm && npm run build:iife"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@editor/editor-core": "0.1.0",
+    "@editor/editor-content": "0.1.0",
+    "@editor/editor-course": "0.1.0"
+  }
+}

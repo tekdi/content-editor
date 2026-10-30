@@ -1,0 +1,8 @@
+{
+  "name": "editor-webcomponent",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/editor-webcomponent/src",
+  "projectType": "library",
+  "tags": ["scope:webcomponent"],
+  "targets": {}
+}
