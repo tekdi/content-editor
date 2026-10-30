@@ -106,7 +106,7 @@ export function ShellManageView({ config, emit }: ShellManageViewProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, count, page, pageSize, filters.query]);
 
-  // A shell may only be edited while no Live course uses it — check the visible rows not checked yet,
+  // A shell may only be edited while no Live or Draft course uses it — check the visible rows not checked yet,
   // one at a time with a short gap so the search gateway isn't flooded.
   useEffect(() => {
     if (loading) return;

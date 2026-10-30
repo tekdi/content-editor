@@ -37,7 +37,7 @@ export interface ShellTableProps {
   onShowCourses: (shell: ShellRecord) => void;
 }
 
-/** Number of Live courses on the shell; clickable when there are any. */
+/** Number of Live and Draft courses on the shell; clickable when there are any. */
 function CourseCount({
   row,
   usage,
@@ -87,7 +87,7 @@ function RowAction({
   }
   if (usage.status === 'used') {
     return (
-      <Tooltip title={`Used by ${usage.count} live course${usage.count === 1 ? '' : 's'} — can't be edited`}>
+      <Tooltip title={`Used by ${usage.count} course${usage.count === 1 ? '' : 's'} — can't be edited`}>
         <LockOutlinedIcon fontSize="small" color="disabled" />
       </Tooltip>
     );

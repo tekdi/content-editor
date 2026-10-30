@@ -33,7 +33,7 @@ export interface ShellCoursesDialogProps {
   onClose: () => void;
 }
 
-/** Popup listing the Live courses built on a shell. */
+/** Popup listing the Live and Draft courses built on a shell. */
 export function ShellCoursesDialog({ config, shell, pageSize, onClose }: ShellCoursesDialogProps) {
   const [page, setPage] = useState(0);
   const [courses, setCourses] = useState<CourseRecord[]>([]);
@@ -106,8 +106,6 @@ export function ShellCoursesDialog({ config, shell, pageSize, onClose }: ShellCo
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 600 }}>Course</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Grade</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Subjects</TableCell>
                 <TableCell sx={{ fontWeight: 600 }}>Last updated</TableCell>
                 <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
               </TableRow>
@@ -130,24 +128,12 @@ export function ShellCoursesDialog({ config, shell, pageSize, onClose }: ShellCo
                       </Box>
                     </Box>
                   </TableCell>
-                  <TableCell>{course.se_gradeLevels?.join(', ') || '—'}</TableCell>
-                  <TableCell>
-                    {course.se_subjects?.length ? (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {course.se_subjects.map((s) => (
-                          <Chip key={s} label={s} size="small" />
-                        ))}
-                      </Box>
-                    ) : (
-                      '—'
-                    )}
-                  </TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDate(course.lastUpdatedOn)}</TableCell>
                   <TableCell>
                     <Chip
                       label={course.status ?? '—'}
                       size="small"
-                      color={course.status === 'Live' ? 'success' : 'default'}
+                      color={course.status === 'Live' ? 'success' : course.status === 'Draft' ? 'warning' : 'default'}
                       variant="outlined"
                     />
                   </TableCell>
@@ -155,7 +141,7 @@ export function ShellCoursesDialog({ config, shell, pageSize, onClose }: ShellCo
               ))}
               {!loading && courses.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 6, color: 'text.secondary' }}>
+                  <TableCell colSpan={3} align="center" sx={{ py: 6, color: 'text.secondary' }}>
                     No courses use this shell
                   </TableCell>
                 </TableRow>

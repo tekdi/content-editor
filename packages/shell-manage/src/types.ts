@@ -110,15 +110,13 @@ export interface ShellRecord {
   [key: string]: unknown;
 }
 
-/** A Live course built on a shell, as returned by composite search. */
+/** A Live or Draft course built on a shell, as returned by composite search. */
 export interface CourseRecord {
   identifier: string;
   name: string;
   description?: string;
   status?: string;
   appIcon?: string;
-  se_gradeLevels?: string[];
-  se_subjects?: string[];
   lastUpdatedOn?: string;
   [key: string]: unknown;
 }
@@ -139,7 +137,7 @@ export interface ShellSearchResult {
   content: ShellRecord[];
 }
 
-/** Whether a shell can be edited: only while no Live course uses it. */
+/** Whether a shell can be edited: only while no Live or Draft course uses it. */
 export type ShellUsage =
   | { status: 'queued' }
   | { status: 'checking' }

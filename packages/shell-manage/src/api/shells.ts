@@ -58,7 +58,10 @@ export async function searchShells(config: ShellManageConfig, params: ShellSearc
   return { count: result.count ?? 0, content: result.content ?? [] };
 }
 
-/** Live courses built on a shell (paged). */
+/** Course statuses that count as "using" a shell — for the course count, edit lock and courses popup. */
+const COURSE_STATUSES = ['Live', 'Draft'];
+
+/** Live and Draft courses built on a shell (paged). */
 export async function searchShellCourses(
   config: ShellManageConfig,
   identifier: string,
@@ -66,7 +69,7 @@ export async function searchShellCourses(
 ): Promise<CourseSearchResult> {
   const result = await postJson<{ count?: number; content?: CourseSearchResult['content'] }>(config, SEARCH_PATH, {
     request: {
-      filters: { status: ['Live'], shell: identifier, primaryCategory: ['Course'], channel: config.channel },
+      filters: { status: COURSE_STATUSES, shell: identifier, primaryCategory: ['Course'], channel: config.channel },
       sort_by: { lastUpdatedOn: 'desc' },
       limit,
       offset,
@@ -78,7 +81,7 @@ export async function searchShellCourses(
 const COUNT_RETRY_DELAY_MS = 1000;
 
 /**
- * Number of Live courses built on this shell — a shell is editable only while it is 0.
+ * Number of Live and Draft courses built on this shell — a shell is editable only while it is 0.
  * Retries once: the search gateway intermittently answers 502 under bursts of calls.
  */
 export async function countCoursesUsingShell(config: ShellManageConfig, identifier: string): Promise<number> {
